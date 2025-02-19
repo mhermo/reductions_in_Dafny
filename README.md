@@ -1,4 +1,3 @@
-Correctness of Problem Reductions Using Dafny
 
 This repository contains Dafny files that verify the correctness of various polynomial-time reductions between NP-complete decision problems.
 

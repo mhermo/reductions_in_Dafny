@@ -1,2 +1,2 @@
-# reduction_in_Dafny
+# reductions_in_Dafny
 Proving correctness of problem reductions using Dafny

@@ -46,11 +46,11 @@ The reduction: independentSet <=p vertexCover
 **/
 
 // Reduction function. This reduction is trivial.
-function indSet_to_vertexCover(g: Graph, k: nat): (Graph, nat)
+function indSet_to_vertexCover(g: Graph, k: nat): nat
     requires valid_graph(g)
     requires k <= |g.V|
 {
-    (g,|g.V|-k)
+    |g.V|-k
 } 
 
 // Reduction correctness

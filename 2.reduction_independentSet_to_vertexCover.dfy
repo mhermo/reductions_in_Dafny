@@ -54,7 +54,7 @@ function indSet_to_vertexCover(g: Graph, k: nat): (Graph, nat)
 } 
 
 // Reduction correctness
-lemma indSet_to_vertexCover_Lemma(g: Graph, k: nat)
+lemma reduction_Lemma(g: Graph, k: nat)
     requires valid_graph(g)
     requires k <= |g.V|
     ensures indSet(g, k) <==> vertexCover(g, |g.V|-k)

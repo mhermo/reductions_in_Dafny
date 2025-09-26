@@ -46,7 +46,7 @@ function complement_graph(g: Graph): Graph
     ensures forall u: nat, v: nat :: u in g.V && v in g.V && u < v ==> 
         ((u, v) in g.E <==> (u, v) !in complement_graph(g).E)
 {
-    if |g.V| == 0 then g else G(g.V, complement_edges(g))
+    G(g.V, complement_edges(g))
 }
 
 //Reduction correctness
@@ -57,3 +57,4 @@ lemma reduction_Lemma(g: Graph, k: nat)
 {}
 
 // 27 code lines
+

@@ -1,43 +1,41 @@
-
+// Nodes in an undirected graph are natural numbers
 datatype Graph = G(V: set<nat>, E: set<(nat, nat)>)
-// The nodes of the graph are natural numbers.
 
-// This predicate guarantees that the edges are ordered pairs of nodes in V.
+
+// The undirected graph is valid
 ghost predicate valid_graph(g: Graph)
 {
     forall u: nat, v: nat :: (u, v) in g.E ==> u in g.V && v in g.V && u < v
 }
 
-// This predicate is the decision problem known as the Independent-Set problem.
-ghost predicate indSet(g: Graph, k: nat)
+// Independent-Set decision problem.
+predicate indSet(g: Graph, k: nat)
     requires valid_graph(g)
     requires k <= |g.V|
 {
-    exists ins: set<nat> :: |ins| == k && is_indSet(g, ins)
+    exists ins: set<nat> :: |ins| == k && ins <= g.V && is_indSet(g, ins)
 }
 
-ghost predicate is_indSet(g: Graph, ins: set<nat>)
+predicate is_indSet(g: Graph, ins: set<nat>)
     requires valid_graph(g)
-    requires |ins| <= |g.V|
+    requires ins <= g.V
 {
-    ins <= g.V &&
     forall u: nat, v:nat :: u in ins && v in ins && u < v ==> (u, v) !in g.E 
 }
 
 
-// This predicate is the decision problem known as the Vertex-Cover problem.
+// Vertex-Cover decision problem.
 ghost predicate vertexCover(g: Graph, k: nat)
     requires valid_graph(g)
     requires k <= |g.V|
 {
-    exists vc: set<nat> :: |vc| == k && is_vertexCover(g, vc)
+    exists vc: set<nat> :: |vc| == k && vc <= g.V && is_vertexCover(g, vc)
 }
 
 ghost predicate is_vertexCover(g: Graph, vc: set<nat>)
     requires valid_graph(g)
-    requires |vc| <= |g.V|
+    requires vc <= g.V
 {
-    vc <= g.V &&
     forall u: nat, v: nat :: (u, v) in g.E ==> (u in vc || v in vc) 
 }
 
@@ -61,14 +59,14 @@ lemma reduction_Lemma(g: Graph, k: nat)
 {
     if indSet(g, k)
     {     
-        var ins: set<nat> :| |ins| == k && is_indSet(g, ins);
+        var ins: set<nat> :| |ins| == k && ins <= g.V && is_indSet(g, ins);
         var vc:= set u | u in g.V && u !in ins;
         assert vc == g.V - ins;
         assert is_vertexCover(g, vc);
     }
     if vertexCover(g, |g.V|-k)
     {
-        var vc: set<nat> :| |vc| == |g.V|-k &&  is_vertexCover(g, vc);
+        var vc: set<nat> :| |vc| == |g.V|-k && vc <= g.V &&  is_vertexCover(g, vc);
         var ins:=  set u | u in g.V && u !in vc;
         assert ins == g.V - vc;
         assert is_indSet(g, ins);

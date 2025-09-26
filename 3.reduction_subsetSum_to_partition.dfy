@@ -1,4 +1,4 @@
-// This function calculates the sum of the elements of a sequence.
+// This function calculates the sum of the elements in a sequence.
 function sum_seq(s:seq<int>): int
 {
 	if |s| == 0 then 0
@@ -8,7 +8,6 @@ function sum_seq(s:seq<int>): int
 
 
 // This function creates a sequence from a multiset.
-// This function will help later. 
 ghost function seq_from_multiset(ms:multiset<int>): seq<int>
 	ensures multiset(seq_from_multiset(ms)) == ms
 	
@@ -19,14 +18,14 @@ ghost function seq_from_multiset(ms:multiset<int>): seq<int>
 }
 
 
-// This problem is known as SubsetSum.
+// SubsetSum decision problem.
 ghost predicate subsetSum(t:int, r:seq<int>)
 {
 	exists s:seq<int>:: multiset(s) <= multiset(r) && sum_seq(s) == t
 }
 
 
-// This problem is known as Partition.
+// Partition decisionn problem.
 ghost predicate partition(r:seq<int>)
 {
 	exists s:seq<int>:: multiset(s) <= multiset(r)  && sum_seq(r) == 2*sum_seq(s)
@@ -39,7 +38,6 @@ The reduction: Subsetsum <=p Partition
 
 
 // Reduction function
-// The reduction only adds a new element to the sequence r.
 function subSet2Partition(t:int, r:seq<int>): seq<int>
 {
 	r + [sum_seq(r) - 2*t]
@@ -129,7 +127,7 @@ lemma same_sum_Lemma(s:seq<int>, r:seq<int>)
 	if r != []
 	{
 		assert r == [r[0]] + r[1..];
-		assert multiset(r)[r[0]] == multiset(s)[r[0]];
+		assert r[0] in multiset(s);
 		var j :| 0 <= j < |s| && s[j] == r[0];
 		assert s == s[..j] + [r[0]] + s[j+1..];
 		var ss := s[..j] + s[j+1..];								
@@ -137,5 +135,3 @@ lemma same_sum_Lemma(s:seq<int>, r:seq<int>)
 		same_sum_Lemma(ss, r[1..]);		
 	}
 }
-
-// 63 code lines

@@ -3,4 +3,4 @@ This repository contains Dafny files that verify the correctness of various poly
 
 Each file contains the corresponding proof of the reduction's correctness, except for the case of Dir_Ham to Undir_Ham, which only presents one of the two directions of the reduction.
 
-Last used Dafny version in this work: 4.8.1
+Last used Dafny version in this work: 4.9.0

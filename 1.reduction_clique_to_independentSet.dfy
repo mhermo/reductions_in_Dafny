@@ -1,14 +1,14 @@
+// Nodes in an undirected graph are natural numbers.
 datatype Graph = G(V: set<nat>, E: set<(nat, nat)>)
-// The nodes of the graph are natural numbers.
 
-// This predicate guarantees that the edges are ordered pairs of nodes in V.
+// The undirected graph is valid
 ghost predicate valid_graph(g: Graph)
 {
     forall u: nat, v: nat :: (u, v) in g.E ==> u in g.V && v in g.V && u < v
 }
 
-// This predicate is the decision problem known as the Clique problem.
-ghost predicate clique(g: Graph, k: nat)
+// Clique decision problem.
+predicate clique(g: Graph, k: nat)
     requires valid_graph(g)
     requires k <= |g.V|
 {
@@ -16,8 +16,8 @@ ghost predicate clique(g: Graph, k: nat)
         (forall u: nat, v: nat :: u in cl && v in cl && u < v ==> (u, v) in g.E)
 }
 
-// This predicate is the decision problem known as the Independent-Set problem.
-ghost predicate indSet(g: Graph, k: nat)
+// Independent-Set decision problem.
+predicate indSet(g: Graph, k: nat)
     requires valid_graph(g)
     requires k <= |g.V|
 {
@@ -28,10 +28,8 @@ ghost predicate indSet(g: Graph, k: nat)
 /**
 The reduction: Clique <=p Independent-Set
 **/
-// Reduction function
 
 // This function calculates the complementary set of edges. 
-// The cost is O(|g.V|^2).
 function complement_edges(g: Graph): set<(nat, nat)>
     requires valid_graph(g)
 {
@@ -40,7 +38,7 @@ function complement_edges(g: Graph): set<(nat, nat)>
 } 
 
 // The reduction function only transforms the initial graph G(V,E) into G(V,E')
-// where E' is the complementary set of E. It has a quadratic cost.  
+// where E' is the complementary set of E.
 function complement_graph(g: Graph): Graph
     requires valid_graph(g)
     ensures valid_graph(complement_graph(g))

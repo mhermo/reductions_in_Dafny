@@ -6,7 +6,6 @@ function sum_seq(s:seq<int>): int
 	else s[0] + sum_seq(s[1..])
 }
 
-
 // This function creates a sequence from a multiset.
 ghost function seq_from_multiset(ms:multiset<int>): seq<int>
 	ensures multiset(seq_from_multiset(ms)) == ms

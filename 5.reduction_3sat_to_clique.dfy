@@ -30,7 +30,6 @@ ghost predicate valid_graph(g: Graph)
         (u, v) in g.E ==> u in g.V && v in g.V && well_ordered_pair(u, v)
 }
 
-
 /******************
 PROBLEM DEFINITIONS
 *******************/

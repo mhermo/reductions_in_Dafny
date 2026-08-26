@@ -4,7 +4,7 @@ INSTANCE TYPE DECLARATION
 type clause = seq<int>
 type Formula = seq<clause>
 // Note: Each formula is in CNF.
-// From now on V denotes a number of variables. Forall variable x: 1 <= x <= V.
+// From now on, V denotes a number of variables. For all variable x: 1 <= x <= V.
 // We assume that any CNF cannot contain empty clauses. 
 
 /*************************
@@ -24,14 +24,12 @@ predicate valid_clause(V: nat, cla: clause)
     |cla| > 0 && (forall n:nat :: n < |cla| ==> 1 <= abs(cla[n]) <= V && cla[n] != 0)
 }
 
-
 // This predicate guarantees that all clauses in a CNF are valid.
 // In addition, we assume that any CNF has at least one clause. 
 predicate valid_formula(V: nat, f: Formula)
 {    
     forall n: nat :: n < |f| ==> valid_clause(V, f[n])
 }
-
 
 // An assignment "assig" is a sequence of boolean values where 
 // forall i in [1..V], the value of variable i is assig[i]. 
@@ -40,14 +38,12 @@ predicate valid_assignment(V: nat, assig: seq<bool>)
     |assig| == V+1
 }
 
-
-// This predicate guarantees that each clause in a CNF has exactly three literal.
+// This predicate guarantees that each clause in a CNF has exactly three literals.
 predicate is3CNF(V: nat, f: Formula)
     requires valid_formula(V, f)
 {
     forall n:nat :: n < |f| ==> |f[n]| == 3
 }
-
 
 /******************
 PROBLEM DEFINITIONS
@@ -56,8 +52,7 @@ PROBLEM DEFINITIONS
 // This predicate guarantees that a literal in a clause makes the clause true.
 predicate good_literal(V: nat, l: int, cla: clause, assig: seq<bool>)
     requires valid_clause(V, cla)
-    requires valid_assignment(V, assig)
-    
+    requires valid_assignment(V, assig)    
 {
     l in cla && (assig[abs(l)] <==> l > 0)
 }
@@ -71,7 +66,6 @@ predicate model_clause(V: nat, cla: clause, assig: seq<bool>)
     exists l: int :: l in cla && good_literal(V, l, cla, assig)
 }
 
-
 // This predicate guarantees that an assignment is a model for a CNF.
 predicate model(V: nat, f: Formula, assig: seq<bool>)
     requires valid_formula(V, f)
@@ -80,14 +74,11 @@ predicate model(V: nat, f: Formula, assig: seq<bool>)
     forall n:nat :: n < |f| ==> model_clause(V, f[n], assig)
 }
 
-
 lemma model_Lemma(V: nat, f: Formula, assig: seq<bool>)
     requires valid_formula(V, f)
     requires valid_assignment(V, assig)
     ensures |f| > 1 ==> (model(V, f, assig) ==> model(V, f[1..], assig))
 {}
-
-
 
 // This predicate guarantees that a CNF is satisfiable.
 ghost predicate isSat(V:nat, f: Formula)
@@ -95,8 +86,6 @@ ghost predicate isSat(V:nat, f: Formula)
 {
     exists assig: seq<bool>:: valid_assignment(V, assig) && model(V, f, assig) 
 }
-
-
 
 /***************
 REDUCTION: INDEPENDENT-SET <=p VERTEX-COVER
@@ -228,7 +217,6 @@ function sat_to_3sat(V: nat, f: Formula): (int, Formula)
          var (newV2, newF):= sat_to_3sat(newV1, f[1..]); 
          (newV2, newCNF + newF) 
 }
-
 
 //// REDUCTION CORRECTNESS ////
 
@@ -363,9 +351,9 @@ ghost function larger_good_assignment(V: nat, f: Formula, assig: seq<bool>): seq
 }
 
 
-// This lema proves that if a 1clause has a model, then the same model, plus 
+// This lemma proves that if a 1clause has a model, then the same model, plus 
 // assigning the true value to the variables added by the transformation from1To3,
-// is also a model for the 3CNF obtained by that tranformation. 
+// is also a model for the 3CNF obtained by that transformation. 
 lemma from1To3_Lemma(V: nat, cla: clause, assig: seq<bool>)
     requires |cla| == 1
     requires valid_assignment(V, assig)
@@ -381,9 +369,9 @@ lemma from1To3_Lemma(V: nat, cla: clause, assig: seq<bool>)
         good_literal(newV, l, newCNF[i],  assig + [true, true]);
 }
 
-// This lema proves that if a 1clause has a model, then the same model, plus 
+// This lemma proves that if a 1clause has a model, then the same model, plus 
 // assigning the true value to the variable added by the transformation from2To3,
-// is also a model for the 3CNF obtained by that tranformation. 
+// is also a model for the 3CNF obtained by that transformation. 
 lemma from2To3_Lemma(V: nat, cla: clause, assig: seq<bool>)
     requires |cla| == 2
     requires valid_assignment(V, assig)
@@ -402,7 +390,7 @@ lemma from2To3_Lemma(V: nat, cla: clause, assig: seq<bool>)
 
 // Auxiliary for backward_Lemma.
 
-// This function looks for the first false of an assignment. 
+// This function looks for the first false in an assignment. 
 // It is used in the next lemma. 
 function first_false(V: nat, W: nat, assig: seq<bool>): nat
     requires 1 <= V < W <= |assig|-1
@@ -423,7 +411,7 @@ function first_false(V: nat, W: nat, assig: seq<bool>): nat
 
 
 
-// This lema proves that if the 3CNF obtained by the transformation fromNTo3
+// This lemma proves that if the 3CNF obtained by the transformation fromNTo3
 // applied to an n > 3 clause has a model 'lassig', then lassig[..V+1] is also a model for the original n > 3 clause.
 // The proof is by contradiction.
 lemma fromNTo3_Lemma(V: nat, cla: clause, lassig: seq<bool>)

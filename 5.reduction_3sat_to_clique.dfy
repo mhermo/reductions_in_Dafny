@@ -1,17 +1,16 @@
 /************************
 INSTANCE TYPE DECLARATION
 ************************/
-
 type node = (nat, int)
 type edge = (node, node)
 datatype Graph = G(V: set<node>, E: set<edge>)
 // The nodes of the graph are pairs of natural numbers. The first number identifies
-// a clause of the CNF and the second one indentifies a literal of the clause
+// a clause of the CNF and the second one identifies a literal of the clause
 
 type clause = seq<int>
 type Formula = seq<clause>
 // Note: Each formula is in CNF.
-// From now on V denotes a number of variables. Forall variable x: 1 <= x <= V.
+// From now on, V denotes a number of variables. For all variable x: 1 <= x <= V.
 // We assume that any CNF cannot contain empty clauses. 
 
 /*************************
@@ -270,7 +269,7 @@ lemma backward_Lemma(V: nat, f: Formula)
 
 
 
-/// Auxiliar functions and lemmas to prove forward_Lemma
+/// Auxiliary functions and lemmas to prove forward_Lemma
 
 ghost function good_literals(V: nat, f: Formula, assig: seq<bool>): set<node>
     requires valid_formula(V, f)
@@ -340,7 +339,7 @@ lemma good_literals_edges_Lemma(V: nat, f: Formula, assig: seq<bool>, level: nat
     }
 }  
 
-/// Auxiliar function and lemmas to prove backward_Lemma
+/// Auxiliary function and lemmas to prove backward_Lemma
 
 lemma set_Lemma<T>(c1: set<T>, c2: set<T>)
     requires c1 <= c2

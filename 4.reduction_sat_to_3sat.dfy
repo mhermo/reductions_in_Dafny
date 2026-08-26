@@ -106,7 +106,7 @@ REDUCTION: INDEPENDENT-SET <=p VERTEX-COVER
 
 // Transforms a clause containing a single literal into an
 // "equivalent" clause with exactly three literals. 
-ghost function from1To3(V: nat, cla: clause): (int, Formula)
+function from1To3(V: nat, cla: clause): (int, Formula)
     requires |cla| == 1
     requires valid_clause(V, cla)
     ensures var (newV, newCNF):= from1To3(V, cla); 
@@ -131,7 +131,7 @@ ghost function from1To3(V: nat, cla: clause): (int, Formula)
 
 // This function transforms a clause containing two literals into an
 // "equivalent" clause with exactly three literals. 
-ghost function from2To3(V: nat, cla: clause): (int, Formula)
+function from2To3(V: nat, cla: clause): (int, Formula)
     requires |cla| == 2
     requires valid_clause(V, cla)
     ensures var (newV, newCNF):= from2To3(V, cla); 
@@ -152,7 +152,7 @@ ghost function from2To3(V: nat, cla: clause): (int, Formula)
 
 // This function transforms a clause containing a n > 3 literals into an
 // "equivalent" clause with exactly three literals. 
-ghost function fromNTo3(V: nat, cla: clause): (int, Formula)
+function fromNTo3(V: nat, cla: clause): (int, Formula)
     requires |cla| > 3
     requires valid_clause(V, cla)
     ensures var (newV, newCNF):= fromNTo3(V, cla); var n:= |cla|; 
@@ -173,7 +173,7 @@ ghost function fromNTo3(V: nat, cla: clause): (int, Formula)
 }
 
 
-ghost function add_two_new_literals(V: nat, cla: clause): (int, Formula)
+function add_two_new_literals(V: nat, cla: clause): (int, Formula)
     requires |cla| > 0
     requires valid_clause(V, cla)
     decreases |cla|
@@ -194,17 +194,15 @@ ghost function add_two_new_literals(V: nat, cla: clause): (int, Formula)
 
 
 // Generalization of previous cases.
-ghost function clauseTo3CNF(V: nat, cla: clause): (int, Formula)
+function clauseTo3CNF(V: nat, cla: clause): (int, Formula)
     requires valid_clause(V, cla)
     ensures var (newV, newCNF):= clauseTo3CNF(V, cla); 
     (
         valid_formula(newV, newCNF) &&
-        newV >= V &&
-        is3CNF(newV, newCNF) &&
-        |cla| == 1 ==> newV == V+2 && |newCNF| == 4 &&
-        |cla| == 2 ==> newV == V+1 && |newCNF| == 2 &&
-        |cla| == 3 ==> newV == V && |newCNF| == 1 &&
-        |cla| > 3 ==> newV == V+|cla|-3 && |newCNF| == |cla|-2 
+        (|cla| == 1 ==> (newV == V+2 && |newCNF| == 4)) &&
+        (|cla| == 2 ==> (newV == V+1 && |newCNF| == 2)) &&
+        (|cla| == 3 ==> (newV == V && |newCNF| == 1)) &&
+        (|cla| > 3 ==> (newV == V+|cla|-3 && |newCNF| == |cla|-2))
     )
 { 
     if |cla| == 1 then from1To3(V, cla)
@@ -215,7 +213,7 @@ ghost function clauseTo3CNF(V: nat, cla: clause): (int, Formula)
 
 
 // Final function.
-ghost function sat_to_3sat(V: nat, f: Formula): (int, Formula)
+function sat_to_3sat(V: nat, f: Formula): (int, Formula)
     requires valid_formula(V, f)
     ensures var (newV, newF):= sat_to_3sat(V, f);
     ( 
@@ -277,7 +275,7 @@ lemma backward_Lemma(V: nat, f: Formula)
 // Auxiliarys for forward_Lemma
 
 /// This function increases 'assig' in such a way that forall x: nat::  first+1 <= x last+1  ==> assig[x] == value 
-ghost function increase_assignment(first: nat, last: nat, assig: seq<bool>, value:bool) : seq<bool>
+function increase_assignment(first: nat, last: nat, assig: seq<bool>, value:bool) : seq<bool>
     requires first == |assig|-1
     requires first  <= last
     ensures var iassig:= increase_assignment(first, last, assig, value); 
@@ -406,7 +404,7 @@ lemma from2To3_Lemma(V: nat, cla: clause, assig: seq<bool>)
 
 // This function looks for the first false of an assignment. 
 // It is used in the next lemma. 
-ghost function first_false(V: nat, W: nat, assig: seq<bool>): nat
+function first_false(V: nat, W: nat, assig: seq<bool>): nat
     requires 1 <= V < W <= |assig|-1
     ensures first_false(V, W, assig) <= W
     ensures first_false(V, W, assig) == 0 || first_false(V, W, assig) >= V
@@ -476,12 +474,12 @@ lemma sat_to_3sat_Lemma(V: nat, f: Formula, lassig: seq<bool>)
 {
     if |f| > 0
     {
-            var (newV1, newCNF):= clauseTo3CNF(V, f[0]);
-            var (newV2, newF):= sat_to_3sat(newV1, f[1..]);
-            assert sat_to_3sat(V, f) ==  (newV2, newCNF + newF);
-            assert newV2 >= newV1;
-            assert |lassig| == newV2+1;
-            model_Lemma(newV2, newF, lassig);
+        var (newV1, newCNF):= clauseTo3CNF(V, f[0]);
+        var (newV2, newF):= sat_to_3sat(newV1, f[1..]);
+        assert sat_to_3sat(V, f) ==  (newV2, newCNF + newF);
+        assert newV2 >= newV1;
+        assert |lassig| == newV2+1;
+        model_Lemma(newV2, newF, lassig);
         if
         case |f[0]| == 1 =>
             assert newV1 == V+2;
@@ -521,6 +519,4 @@ lemma sat_to_3sat_Lemma(V: nat, f: Formula, lassig: seq<bool>)
     }
 }
 
-//310 code lines
-
-
+//325 code lines

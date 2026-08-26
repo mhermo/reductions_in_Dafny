@@ -21,7 +21,6 @@ predicate is_indSet(g: Graph, ins: set<nat>)
     forall u: nat, v:nat :: u in ins && v in ins && u < v ==> (u, v) !in g.E 
 }
 
-
 // Vertex-Cover decision problem.
 predicate vertexCover(g: Graph, k: nat)
     requires valid_graph(g) && k <= |g.V|

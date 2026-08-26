@@ -21,7 +21,7 @@ ghost predicate subsetSum(t:int, r:seq<int>)
 	exists s:seq<int>:: multiset(s) <= multiset(r) && sum_seq(s) == t
 }
 
-// Partition decisionn problem.
+// Partition decision problem.
 ghost predicate partition(r:seq<int>)
 {
 	exists s:seq<int>:: multiset(s) <= multiset(r)  && sum_seq(r) == 2*sum_seq(s)
@@ -37,7 +37,6 @@ function subSet2Partition(t:int, r:seq<int>): seq<int>
 	r + [sum_seq(r) - 2*t]
 }
 
-
 //Reduction correctness
 lemma reduction_Lemma  (t:int, r:seq<int>)
 	ensures subsetSum(t, r) <==> partition(subSet2Partition(t, r)) 
@@ -52,11 +51,9 @@ lemma reduction_Lemma  (t:int, r:seq<int>)
 	}
 }
 
-
 lemma forward_Lemma (t:int, r:seq<int>)
 	requires subsetSum(t, r) 
 	ensures partition(subSet2Partition(t, r)) 
-
 {	
 	general_distributive_Lemma();
 	var s: seq<int> :|  multiset(s) <= multiset(r) && sum_seq(s) == t;
@@ -64,11 +61,9 @@ lemma forward_Lemma (t:int, r:seq<int>)
 	assert 2*sum_seq(ns) == sum_seq(subSet2Partition(t, r));
 }
 
-
 lemma backward_Lemma (t:int, r:seq<int>)
 	requires partition(subSet2Partition(t, r)) 
 	ensures subsetSum(t, r)
-
 {	
 	general_distributive_Lemma();
 	var i: int := sum_seq(r) - 2*t;
@@ -87,7 +82,7 @@ lemma backward_Lemma (t:int, r:seq<int>)
 	}
 }
 
-///// Auxiliar lemmas for sequences and multisets //////////////////////
+///// Auxiliary lemmas for sequences and multisets //////////////////////
 
 lemma distributive_Lemma(s:seq<int>, r:seq<int>)
 	ensures sum_seq(s + r) == sum_seq(s) + sum_seq(r)

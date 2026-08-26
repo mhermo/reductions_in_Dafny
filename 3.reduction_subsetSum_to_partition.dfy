@@ -8,14 +8,12 @@ function sum_seq(s:seq<int>): int
 
 // This function creates a sequence from a multiset.
 ghost function seq_from_multiset(ms:multiset<int>): seq<int>
-	ensures multiset(seq_from_multiset(ms)) == ms
-	
+	ensures multiset(seq_from_multiset(ms)) == ms	
 {
 	if ms == multiset{} then [] else 
 		var i:| i in ms; 
 		[i] + seq_from_multiset(ms - multiset{i})
 }
-
 
 // SubsetSum decision problem.
 ghost predicate subsetSum(t:int, r:seq<int>)
@@ -23,18 +21,15 @@ ghost predicate subsetSum(t:int, r:seq<int>)
 	exists s:seq<int>:: multiset(s) <= multiset(r) && sum_seq(s) == t
 }
 
-
 // Partition decisionn problem.
 ghost predicate partition(r:seq<int>)
 {
 	exists s:seq<int>:: multiset(s) <= multiset(r)  && sum_seq(r) == 2*sum_seq(s)
 }
 
-
 /**
 The reduction: Subsetsum <=p Partition
 **/
-
 
 // Reduction function
 function subSet2Partition(t:int, r:seq<int>): seq<int>
@@ -86,13 +81,11 @@ lemma backward_Lemma (t:int, r:seq<int>)
 	}
 	else
 	{
-		
 		var sm: seq<int> := seq_from_multiset(multiset(s) - multiset{i}); 
 		same_sum_Lemma(sm + [i], s);
 		
 	}
 }
-
 
 ///// Auxiliar lemmas for sequences and multisets //////////////////////
 
@@ -123,7 +116,7 @@ lemma same_sum_Lemma(s:seq<int>, r:seq<int>)
 	ensures sum_seq(r) == sum_seq(s)
 {
 	general_distributive_Lemma();
-	if r != []
+	if |r| > 0
 	{
 		assert r == [r[0]] + r[1..];
 		assert r[0] in multiset(s);
@@ -134,3 +127,5 @@ lemma same_sum_Lemma(s:seq<int>, r:seq<int>)
 		same_sum_Lemma(ss, r[1..]);		
 	}
 }
+
+// 63 code lines

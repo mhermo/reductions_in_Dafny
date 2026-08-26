@@ -253,7 +253,7 @@ lemma backward_Lemma(V: nat, f: Formula)
         var cl: set<node> :| |cl| == |f| && is_clique(g, cl);
         var nassig: seq<bool>:= assignment_from_clique (V, f, cl);
         assert forall n: nat, l: int :: (n, l) in cl ==> good_literal(V, l, f[n], nassig);
-        var sn: set<nat>:= set n | 0 <= n < |f| :: n;
+        var sn: set<nat>:= set n: nat {:trigger f[n]} | 0 <= n < |f| :: n;
         set_of_nodes_level_Lemma(V, f, 0);
         assert  levels_in_set(g.V) == sn;    
         set_of_nodes_level_cardinal_Lemma(V, f, 0);
@@ -477,4 +477,4 @@ ghost function assignment_from_clique(V: nat, f: Formula, cl: set<node>): seq<bo
         else nassig[..abs(u.1)] + [false] +  nassig[abs(u.1)+1..]    
 }
 
-// 280 code lines
+// 290 code lines

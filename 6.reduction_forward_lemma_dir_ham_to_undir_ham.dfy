@@ -1,10 +1,9 @@
-module First {
 
 /************************
 INSTANCE TYPE DECLARATION
 ************************/
 
-// In a graph G(V,E), V is a natural meaning that the set of nodes is {0, 1,...V-1} 
+// In a graph G(V,E), V is a natural number, meaning that the set of nodes is {0, 1,...V-1} 
 datatype Graph = G(V: nat, E: set<(nat, nat)>)
 type UndirectedGraph = Graph
 type DirectedGraph = Graph
@@ -41,7 +40,6 @@ ghost predicate is_directed_ham(g: DirectedGraph, hc: seq<nat>)
     )
 }
 
-
 ghost predicate undirected_ham(ug: UndirectedGraph)
     requires valid_UndirectedGraph(ug)
 {
@@ -64,21 +62,20 @@ ghost predicate is_undirected_ham(ug: UndirectedGraph, uhc: seq<nat>)
 }
 
 
-/////// AUXILIAR PREDICATES, LEMMAS AND FUNCTIONS //////
+/////// AUXILIARY PREDICATES, LEMMAS AND FUNCTIONS //////
 
 function In2Mid(n: nat): set<(nat, nat)>
 {
 	set u: nat | n <= u < 2*n :: (u-n, u)
 }
 
-
 function Mid2Out(n: nat): set<(nat, nat)>
-    ensures forall u: nat, v: nat :: n <= u < 2*n && 2*n < v < 3*n ==>
+    ensures forall u: nat, v: nat {:trigger (u, v) in Mid2Out(n)}:: 
+        n <= u < 2*n && 2*n < v < 3*n ==>
         ((u,v) in Mid2Out(n) <==> v == u + n)
 {
-	set u: nat | 2*n <= u < 3*n :: (u-n, u)
+	set u: nat| 2*n <= u < 3*n :: (u-n, u)
 }
-
 
 function In2Out(g: DirectedGraph): set<(nat, nat)>
     requires valid_DirectedGraph(g)    
@@ -93,14 +90,12 @@ function new_edges(g: DirectedGraph): set<(nat, nat)>
     In2Mid(g.V) + Mid2Out(g.V) + In2Out(g)
 }
 
-
 // Reduction function.
 function DirectedGraph_to_UndirectedGraph(g: DirectedGraph): UndirectedGraph
     requires valid_DirectedGraph(g)
 {
     G(3*g.V, new_edges(g))
 } 
-
 
 // Reduction correctness
 /////////////////////////////////////////////////////
@@ -123,7 +118,6 @@ lemma reduction_Lemma(g: DirectedGraph)
 }
 */
 
-
 /// Construction of an undirected hamiltonian circuit from a directed one 
 function new_circuit(n: nat, hc: seq<nat>): seq<nat>
     requires n >= |hc|
@@ -144,7 +138,6 @@ function directed_ham_to_undirected_ham(g: DirectedGraph, hc: seq<nat>): seq<nat
     new_circuit(g.V, hc)
 }
 
-
 //////Lemmas to prove the forward_Lemma//////////////
 
 lemma nodes_circuit_Lemma(u: nat, n: nat, hc: seq<nat>)
@@ -152,7 +145,6 @@ lemma nodes_circuit_Lemma(u: nat, n: nat, hc: seq<nat>)
     ensures var uhc: seq<nat> := new_circuit(n, hc);
         u in uhc <==>  u in hc || u-n in hc || u-2*n in hc
 {}
-
 
 lemma undirected_nodes_circuit_Lemma(u: nat, g: DirectedGraph, hc: seq<nat>)
     requires valid_DirectedGraph(g)
@@ -163,7 +155,6 @@ lemma undirected_nodes_circuit_Lemma(u: nat, g: DirectedGraph, hc: seq<nat>)
     nodes_circuit_Lemma(u, |hc|, hc);
 }
 ////////////////////////////////////////////////////////////////////////
-
 
 /// Properties of nodes in new_circuit(n, hc)
 lemma new_circuit_Lemma1(i: nat, n: nat, hc: seq<nat>)
@@ -319,8 +310,4 @@ lemma forward_Lemma(g: DirectedGraph, ug: UndirectedGraph)
     }
 }
 
-}
-
-/// 172 code lines
-
-
+/// 178 code lines

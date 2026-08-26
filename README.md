@@ -4,7 +4,7 @@
 This repository contains the Dafny source code accompanying the paper
 *Proving Correctness of Problem Reductions Using Dafny*.
 
-The artifact verifies the functional correctness of several reductions
+The artifact verifies the correctness of several reductions
 between decision problems. It does not verify their time complexity.
 
 ## Requirements

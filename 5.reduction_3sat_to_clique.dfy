@@ -4,14 +4,14 @@ INSTANCE TYPE DECLARATION
 type node = (nat, int)
 type edge = (node, node)
 datatype Graph = G(V: set<node>, E: set<edge>)
-// The nodes of the graph are pairs of natural numbers. The first number identifies
+// Nodes in the graph are pairs of natural numbers. The first number identifies
 // a clause of the CNF and the second one identifies a literal of the clause
 
 type clause = seq<int>
 type Formula = seq<clause>
 // Note: Each formula is in CNF.
-// From now on, V denotes a number of variables. For all variable x: 1 <= x <= V.
-// We assume that any CNF cannot contain empty clauses. 
+// From now on, V denotes a positive number such that for all variable x: 1 <= x <= V.
+// We assume that no CNF contains empty clauses. 
 
 /*************************
 TYPE DEFINITION PREDICATES
@@ -69,7 +69,7 @@ predicate valid_3clause(V: nat, cla: clause)
 
 
 // This predicate guarantees that all clauses in a CNF are valid.
-// In addition, we assume that any CNF has at least one clause. 
+// We assume that any CNF has at least one clause. 
 predicate valid_formula(V: nat, f: Formula)
 {    
     forall n: nat :: n < |f| ==> valid_3clause(V, f[n])

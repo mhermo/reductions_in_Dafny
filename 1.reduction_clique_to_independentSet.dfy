@@ -11,8 +11,14 @@ ghost predicate valid_graph(g: Graph)
 predicate clique(g: Graph, k: nat)
     requires valid_graph(g) && k <= |g.V|
 {
-    exists cl: set<nat> :: |cl| == k && cl <= g.V &&
-        (forall u: nat, v: nat :: u in cl && v in cl && u < v ==> (u, v) in g.E)
+    exists cl: set<nat> :: |cl| == k && cl <= g.V && is_clique(g, cl)
+}
+
+predicate is_clique(g: Graph, cl: set<nat>)
+    requires valid_graph(g)
+    requires cl <= g.V
+{
+    forall u: nat, v:nat :: u in cl && v in cl && u < v ==> (u, v) in g.E 
 }
 
 // Independent-Set decision problem.
@@ -20,14 +26,21 @@ predicate indSet(g: Graph, k: nat)
     requires valid_graph(g) && k <= |g.V|
 {
     exists ins: set<nat> :: |ins| == k && ins <= g.V &&
-        (forall u, v: nat :: u in ins && v in ins && u < v ==> (u, v) !in g.E)
+        is_indSet(g, ins)
+}
+
+predicate is_indSet(g: Graph, ins: set<nat>)
+    requires valid_graph(g)
+    requires ins <= g.V
+{
+    forall u: nat, v:nat :: u in ins && v in ins && u < v ==> (u, v) !in g.E 
 }
 
 /**
 The reduction: Clique <=p Independent-Set
 **/
 
-// This function calculates the complementary set of edges. 
+// This function calculates the complement set of edges. 
 function complement_edges(g: Graph): set<(nat, nat)>
     requires valid_graph(g)
 {   
@@ -35,7 +48,7 @@ function complement_edges(g: Graph): set<(nat, nat)>
 } 
 
 // The reduction function only transforms the initial graph G(V,E) into G(V,E')
-// where E' is the complementary set of E.
+// where E' is the complement set of E.
 function complement_graph(g: Graph): Graph
     requires valid_graph(g)
     ensures valid_graph(complement_graph(g))
@@ -52,6 +65,4 @@ lemma reduction_Lemma(g: Graph, k: nat)
     ensures clique(g, k) <==> indSet(complement_graph(g), k)
 {}
 
-// 25 code lines
-
-
+// 32 code lines

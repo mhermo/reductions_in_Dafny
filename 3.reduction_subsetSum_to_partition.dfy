@@ -1,4 +1,4 @@
-// This function calculates the sum of the elements in a sequence.
+// This function sums the elements in a sequence.
 function sum_seq(s:seq<int>): int
 {
 	if |s| == 0 then 0

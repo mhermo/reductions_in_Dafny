@@ -4,7 +4,7 @@ INSTANCE TYPE DECLARATION
 type clause = seq<int>
 type Formula = seq<clause>
 // Note: Each formula is in CNF.
-// From now on, V is a positive number such that for all variables x: 1 <= x <= V.
+// From now on, V is a positive number such that for all variable x: 1 <= x <= V.
 // We assume that no CNF contains empty clauses. 
 
 /*************************

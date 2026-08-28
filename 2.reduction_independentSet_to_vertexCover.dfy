@@ -22,18 +22,17 @@ predicate is_indSet(g: Graph, ins: set<nat>)
 }
 
 // Vertex-Cover decision problem.
-predicate vertexCover(g: Graph, k: nat)
+ghost predicate vertexCover(g: Graph, k: nat)
     requires valid_graph(g) && k <= |g.V|
 {
     exists vc: set<nat> :: |vc| == k && vc <= g.V && is_vertexCover(g, vc)
 }
 
-predicate is_vertexCover(g: Graph, vc: set<nat>)
+ghost predicate is_vertexCover(g: Graph, vc: set<nat>)
     requires valid_graph(g)
     requires vc <= g.V
 {
-    forall u: nat, v: nat :: u in g.V && v in g.V && (u, v) in g.E 
-        ==> (u in vc || v in vc) 
+    forall u: nat, v: nat:: (u, v) in g.E ==> (u in vc || v in vc) 
 }
 
 /**
@@ -69,8 +68,7 @@ lemma forward_Lemma(g: Graph, k: nat)
 	ensures vertexCover(g, |g.V|-k)
 {
     var ins: set<nat> :| |ins| == k && ins <= g.V && is_indSet(g, ins);
-    var vc:= set u | u in g.V && u !in ins;
-    assert vc == g.V - ins;
+    var vc := g.V - ins;
     assert is_vertexCover(g, vc);
 }
 
@@ -80,10 +78,8 @@ lemma backward_Lemma (g: Graph, k: nat)
 	ensures indSet(g, k)
 {
     var vc: set<nat> :| |vc| == |g.V|-k && vc <= g.V &&  is_vertexCover(g, vc);
-    var ins:=  set u | u in g.V && u !in vc;
-    assert ins == g.V - vc;
+    var ins:=  g.V-vc;
     assert is_indSet(g, ins);      
 }
 
-// 45 code lines
-
+// 44 code lines

@@ -3,7 +3,7 @@
 INSTANCE TYPE DECLARATION
 ************************/
 
-// In a graph G(V,E), V is a natural number, meaning that the set of nodes is {0, 1,...V-1} 
+// In a graph G(V, E), V is a natural number, meaning that the set of nodes is {0, 1,...V-1} 
 datatype Graph = G(V: nat, E: set<(nat, nat)>)
 type UndirectedGraph = Graph
 type DirectedGraph = Graph
@@ -118,7 +118,7 @@ lemma reduction_Lemma(g: DirectedGraph)
 }
 */
 
-/// Construction of an undirected hamiltonian circuit from a directed one 
+/// Construction of an undirected Hamiltonian circuit from a directed one 
 function new_circuit(n: nat, hc: seq<nat>): seq<nat>
     requires n >= |hc|
     ensures |new_circuit(n, hc)| == 3*|hc|
@@ -273,7 +273,6 @@ lemma edge_new_circuit_Lemma(g: DirectedGraph, i: nat, hc: seq<nat>)
             new_edges_circuit_Lemma2(r, g, hc);
     }
 }
-
 
 lemma forward_Lemma(g: DirectedGraph, ug: UndirectedGraph)     
     requires valid_DirectedGraph(g)

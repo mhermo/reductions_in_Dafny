@@ -4,8 +4,8 @@ INSTANCE TYPE DECLARATION
 type clause = seq<int>
 type Formula = seq<clause>
 // Note: Each formula is in CNF.
-// From now on, V denotes a number of variables. For all variable x: 1 <= x <= V.
-// We assume that any CNF cannot contain empty clauses. 
+// From now on, V is a positive number such that for all variables x: 1 <= x <= V.
+// We assume that no CNF contains empty clauses. 
 
 /*************************
 TYPE DEFINITION PREDICATES
@@ -25,7 +25,7 @@ predicate valid_clause(V: nat, cla: clause)
 }
 
 // This predicate guarantees that all clauses in a CNF are valid.
-// In addition, we assume that any CNF has at least one clause. 
+// We assume that any CNF has at least one clause. 
 predicate valid_formula(V: nat, f: Formula)
 {    
     forall n: nat :: n < |f| ==> valid_clause(V, f[n])
@@ -138,8 +138,7 @@ function from2To3(V: nat, cla: clause): (int, Formula)
         )
 }
 
-
-// This function transforms a clause containing a n > 3 literals into an
+// This function transforms a clause containing n > 3 literals into an
 // "equivalent" clause with exactly three literals. 
 function fromNTo3(V: nat, cla: clause): (int, Formula)
     requires |cla| > 3
